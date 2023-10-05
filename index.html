@@ -1,11 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Hello world</h1>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>mistypeak | Support</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+      }
+      body {
+        background-color: #edf3ff;
+      }
+      .container {
+        width: 1000px;
+        height: 550px;
+        background: white;
+        border-radius: 10px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        display: flex;
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        gap: 20px;
+      }
+      .container .img-con {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .container .img-con img {
+        width: 300px;
+        height: 180px;
+        object-fit: cover;
+      }
+      .form {
+        flex: 1;
+        padding: 30px 0px;
+      }
+      .heading {
+        font-size: 35px;
+        font-weight: 500;
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .input-con {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+      }
+      input,
+      textarea,
+      button {
+        width: 300px;
+        height: 30px;
+        padding: 5px 20px;
+        border: none;
+        background: rgb(233, 233, 233);
+        border-radius: 25px;
+        outline: none;
+      }
+
+      textarea {
+        height: 130px;
+        padding: 15px 20px;
+      }
+      button {
+        background-color: #007942;
+        color: white;
+        font-size: 20px;
+        height: 40px;
+        cursor: pointer;
+      }
+      .error-message {
+        color: red;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="img-con">
+        <img src="./mistypeak.png" alt="mistypeak" />
+      </div>
+      <form class="form" id="support-form">
+        <div class="heading">Support</div>
+        <div class="input-con">
+          <div>
+            <input type="email" name="email" placeholder=" Email" />
+            <div class="error-message" id="email-error"></div>
+          </div>
+          <div>
+            <input type="subject" name="subject" placeholder=" Subject" />
+            <div class="error-message" id="subject-error"></div>
+          </div>
+          <div class="error-message" id="email-error"></div>
+          <div>
+            <textarea
+              name="description"
+              placeholder="discription "
+              rows="4"
+              cols="50"
+            ></textarea>
+            <div class="error-message" id="description-error"></div>
+          </div>
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+      }
+
+      function displayErrorMessage(elementId, message) {
+        const errorElement = document.getElementById(elementId);
+        errorElement.textContent = message;
+      }
+
+      function clearErrorMessage(elementId) {
+        const errorElement = document.getElementById(elementId);
+        errorElement.textContent = "";
+      }
+
+      document
+        .getElementById("support-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const emailInput = document.querySelector('input[name="email"]');
+          const SubjectInp = document.querySelector('input[name="subject"]');
+          const discInput = document.querySelector(
+            'textarea[name="description"]'
+          );
+
+          const email = emailInput.value;
+          const description = discInput.value;
+          const subject = SubjectInp.value;
+          const data = { email, subject, description };
+          if (!email) {
+            displayErrorMessage("email-error", "Please email address.");
+          } else if (!isValidEmail(email)) {
+            displayErrorMessage(
+              "email-error",
+              "Please enter a valid email address."
+            );
+            return;
+          } else {
+            clearErrorMessage("email-error");
+          }
+          if (subject.trim() === "") {
+            displayErrorMessage("subject-error", "Subject field is required.");
+            return;
+          } else {
+            clearErrorMessage("subject-error");
+          }
+          if (description.trim() === "") {
+            displayErrorMessage(
+              "description-error",
+              "Description field is required."
+            );
+            return;
+          } else {
+            clearErrorMessage("description-error");
+          }
+
+          fetch("http://13.233.133.2513000/api/v1/support", {
+            method: "POST",
+            body: jsonData,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((res) => res.json())
+            .then((data) => console.log(data))
+            .catch((err) => console.log(err));
+        });
+    </script>
+  </body>
 </html>
